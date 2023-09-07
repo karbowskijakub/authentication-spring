@@ -1,13 +1,12 @@
 import { ReturnBook } from "./ReturnBook";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
-import {  useEffect,useContext } from "react";
-import { SpinnerLoading } from "../utils/SpinnerLoading";
+import { useEffect, useContext } from "react";
+import { SpinnerLoading } from "./SpinnerLoading";
 import { BooksContext } from "../providers/BooksContext";
 
 const Carousel = () => {
-  
-  const {books, setBooks} = useContext(BooksContext)
+  const { books, setBooks } = useContext(BooksContext);
   // const [books, setBooks] = useState<BookModel[]>([]);
 
   const BASE_URL = "http://localhost:8080/api/books";
@@ -21,9 +20,7 @@ const Carousel = () => {
   }, [data]);
 
   if (isLoading) {
-    return (
-<SpinnerLoading/>
-    );
+    return <SpinnerLoading />;
   }
 
   if (error) {
@@ -94,10 +91,9 @@ const Carousel = () => {
       {/* Mobile */}
       <div className="d-lg-none mt-3">
         <div className="row d-flex justify-content-center align-items-center">
-        {books.slice(0, 1).map((book) => (
-                <ReturnBook book={book} key={book.id} />
-              ))}
-         
+          {books.slice(0, 1).map((book) => (
+            <ReturnBook book={book} key={book.id} />
+          ))}
         </div>
       </div>
       <div className="homepage-carousel-title mt-3">
