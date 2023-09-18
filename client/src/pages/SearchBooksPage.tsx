@@ -1,40 +1,43 @@
-import { useEffect, useContext,useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { SpinnerLoading } from "../components/SpinnerLoading";
 import SearchBook from "../components/SearchBook";
 import { BooksContext } from "../providers/BooksContext";
 import Pagination from "../components/Pagination";
 
-
 const SearchBooksPage = () => {
-
-const [currentPage,setCurrentPage] = useState(1);
-const [booksPerPage] = useState(5);
-const [totalAmountOfBooks, setTotalAmountOfBooks] = useState(0);
-const [totalPages,setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [booksPerPage] = useState(5);
+  const [totalAmountOfBooks, setTotalAmountOfBooks] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [search, setSearch] = useState("");
+  const [searchUrl, setSearchUrl] = useState("");
 
   const { books, setBooks } = useContext(BooksContext);
   const BASE_URL = "http://localhost:8080/api/books";
 
-  const { data, isLoading, error,  isFetching } = useQuery(["repoData", currentPage], () =>
-    fetch(`${BASE_URL}?page=${currentPage-1}&size=${booksPerPage}`).then((res) => res.json())
+  let url: string = '';
+
+
+  if (searchUrl === "") {
+    url = `${BASE_URL}?page=${currentPage - 1}&size=${booksPerPage}`;
+  } else {
+    url = BASE_URL + searchUrl;
+  }
+
+  const { data, isLoading, error, isFetching } = useQuery(
+    ["repoData", currentPage,searchUrl],
+    () => fetch(url).then((res) => res.json())
   );
 
   useEffect(() => {
-   
-
-    data && (setBooks(data._embedded.books),
-
-
-    setTotalAmountOfBooks(data.page.totalElements),
-    setTotalPages(data.page.totalPages)
-
-    );
-    
+    data &&
+      (setBooks(data._embedded.books),
+      setTotalAmountOfBooks(data.page.totalElements),
+      setTotalPages(data.page.totalPages));
   }, [data]);
 
-
-  if (isLoading|| isFetching) {
+  if (isLoading || isFetching) {
     return <SpinnerLoading />;
   }
 
@@ -42,11 +45,23 @@ const [totalPages,setTotalPages] = useState(0);
     return `An error has occurred:${error}`;
   }
 
-const indexOfLastBook: number = currentPage * booksPerPage;
-const indexOfFirstBook: number = indexOfLastBook - booksPerPage;
-let lastItem = booksPerPage * currentPage <= totalAmountOfBooks ? booksPerPage * currentPage: totalAmountOfBooks;
+const searchHandleChange = () => {
+  if (search === ''){
+    setSearchUrl('')
+  }else{
+    setSearchUrl(`/search/findByTitleContaining?title=${search}&page=0&size=${booksPerPage}`)
+  }
+}
 
-const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const indexOfLastBook: number = currentPage * booksPerPage;
+  const indexOfFirstBook: number = indexOfLastBook - booksPerPage;
+  let lastItem =
+    booksPerPage * currentPage <= totalAmountOfBooks
+      ? booksPerPage * currentPage
+      : totalAmountOfBooks;
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div>
@@ -60,8 +75,9 @@ const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
                   type="search"
                   placeholder="Search"
                   aria-labelledby="Search"
+                  onChange={e => setSearch(e.target.value)}
                 />
-                <button className="btn btn-outline-success">Search</button>
+                <button className="btn btn-outline-success" onClick={searchHandleChange}>Search</button>
               </div>
             </div>
             <div className="col-4">
@@ -110,15 +126,21 @@ const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
           </div>
 
           <div className="mt-3">
-            <h5>Number of results: (22)</h5>
+            <h5>Number of results: ({totalAmountOfBooks})</h5>
           </div>
-          <p>1 to 5 of 22 items:</p>
+          <p>
+            {indexOfFirstBook + 1} to {lastItem} of {totalAmountOfBooks} items:
+          </p>
           {books.map((book) => (
             <SearchBook book={book} key={book.id} />
           ))}
-          {totalPages >1 && 
-          <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate}/>
-          }
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              paginate={paginate}
+            />
+          )}
         </div>
       </div>
     </div>
