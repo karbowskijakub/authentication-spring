@@ -1,22 +1,24 @@
 import Navbar from "./layouts/Navbar";
 import { Footer } from "./layouts/Footer";
 import HomePage from "./pages/HomePage";
-import { QueryClient,QueryClientProvider} from 'react-query'
 import SearchBooksPage from "./pages/SearchBooksPage";
-
-const queryClient = new QueryClient()
+import { Route, Routes } from "react-router-dom";
+import BookCheckoutPage from "./pages/BookCheckoutPage";
 
 const App = () => {
   return (
-    <>
-    <QueryClientProvider client={queryClient}>
+    <div className="d-flex flex-column min-vh-100">
       <Navbar />
-      {/* <HomePage /> */}
-      <SearchBooksPage/> 
+      <div className="flex-grow-1">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+
+          <Route path="/search" element={<SearchBooksPage />} />
+          <Route path="/checkout/:bookId" element={<BookCheckoutPage />} />
+        </Routes>
+      </div>
       <Footer />
-      <div></div>
-      </QueryClientProvider>
-    </>
+    </div>
   );
 };
 

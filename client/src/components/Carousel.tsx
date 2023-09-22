@@ -16,7 +16,7 @@ const Carousel = () => {
   );
 
   useEffect(() => {
-    data && setBooks(data._embedded.books);
+    data && setBooks(data._embedded?.books);
   }, [data]);
 
   if (isLoading) {
@@ -42,21 +42,21 @@ const Carousel = () => {
         <div className="carousel-inner">
           <div className="carousel-item active">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(0, 3).map((book) => (
+              {books?.slice(0, 3).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
           </div>
           <div className="carousel-item">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(3, 6).map((book) => (
+              {books?.slice(3, 6).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
           </div>
           <div className="carousel-item">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(6, 9).map((book) => (
+              {books?.slice(6, 9).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
@@ -91,7 +91,7 @@ const Carousel = () => {
       {/* Mobile */}
       <div className="d-lg-none mt-3">
         <div className="row d-flex justify-content-center align-items-center">
-          {books.slice(0, 1).map((book) => (
+          {books?.slice(0, 1).map((book) => (
             <ReturnBook book={book} key={book.id} />
           ))}
         </div>
