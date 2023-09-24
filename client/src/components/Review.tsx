@@ -3,7 +3,6 @@ import StarsReview from "./StarsReview";
 
 const Review = ({
   review,
-
 }: {
   review: ReviewModel;
 

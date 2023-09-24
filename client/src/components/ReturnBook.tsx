@@ -1,5 +1,6 @@
 import Images from "../images/Images";
 import { BookModel} from "../models/BookModel";
+import { Link } from "react-router-dom";
 
  export const ReturnBook =({ book }: { book: BookModel }) => {
 
@@ -26,7 +27,7 @@ import { BookModel} from "../models/BookModel";
              
               <h6 className='mt-2'>{book.title}</h6>
               <p>{book.author}</p>
-              <a className='btn main-color text-white' href='#'>Reserve</a>
+              <Link className='btn main-color text-white' to={`checkout/${book.id}`} >Reserve</Link>
             </div>
         </div>
     );
